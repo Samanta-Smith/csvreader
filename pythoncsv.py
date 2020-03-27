@@ -6,9 +6,16 @@ import sys
 var = sys.argv[1]
 
 
+class Prodact():
+    def __init__(self,n,x,y,z):
+        self.name = n
+        self.sales = x
+        self.quantity = y
+        self.profit = z
 with open(var) as f:
    reader = csv.reader(f,delimiter=';')
    n= 0
+   product = {}
    days = []
    data = [['Product', 'Sales', 'Quantity', 'Profit'],]
    profit = 0
@@ -60,12 +67,22 @@ with open(var) as f:
        bb = datetime.datetime(int(b[2]),int(b[0]),int(b[1]))
        cc = aa - bb
        days.append(cc.days)
-       data.append([row[15],row[17],row[18],row[20]])
 
+       name = row[15]
+       if name not in product:
+           product[name] = Prodact(row[15],row[17],row[18],row[20])
+       else:
+           product[name].sales += row[17]
+           product[name].quantity += row[18]
+           product[name].profit += row[20]
+
+
+
+for i in product:
+    data.append([product[i].name,product[i].sales ,product[i].quantity,int(product[i].profit)])
 
 avdays = numpy.mean(days)
 std = numpy.std(days)
-
 
 print(int(profit))
 print(max_sales_prod)
